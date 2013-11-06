@@ -1,0 +1,11 @@
+<Context>
+<Resource name="jdbc/simplistic"
+auth="Container"
+type="javax.sql.DataSource"
+username="servlet"
+password="servlet"
+driverClassName="com.mysql.jdbc.Driver"
+url="jdbc:mysql://localhost:8889/simplistic"
+maxActive="15"
+maxIdle="3"/>
+</Context>
