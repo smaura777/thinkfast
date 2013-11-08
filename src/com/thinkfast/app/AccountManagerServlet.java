@@ -67,6 +67,39 @@ public class AccountManagerServlet extends HttpServlet {
 		
 		resp.setKeyValue("request2", details2);
 		resp.setKeyValue("status_code", "200");
+		
+		List<String> items = new ArrayList<String>();
+		items.add("7186290750" );
+		items.add("6465781471");
+		items.add("7185687811" );
+		items.add("6465781771");
+		resp.setKeyValue("AddressBook", items);
+		
+		List<AppJSONResponse> items2 = new ArrayList<AppJSONResponse>();
+		AppJSONResponse user1 = new AppJSONResponse();
+		user1.setKeyValue("id", "df4332");
+		user1.setKeyValue("name", "duck912");
+		user1.setKeyValue("email", "sean@gmail.com");
+		user1.setKeyValue("savings", "$10,000");
+		items2.add(user1);
+		
+		AppJSONResponse user2 = new AppJSONResponse();
+		user2.setKeyValue("id", "ac1032");
+		user2.setKeyValue("name", "kicker912");
+		user2.setKeyValue("email", "paul@gmail.com");
+		user2.setKeyValue("savings", "$20,000");
+		items2.add(user2);
+		
+		AppJSONResponse user3 = new AppJSONResponse();
+		user3.setKeyValue("id", "ws1454");
+		user3.setKeyValue("name", "doormat234");
+		user3.setKeyValue("email", "chin@gmail.com");
+		user3.setKeyValue("savings", "$40,000");
+		items2.add(user3);
+		
+		resp.setKeyValue("clients",items2, true);
+		
+		
 		out.print(resp.getJSON());
 		
 	}
@@ -117,9 +150,49 @@ public class AccountManagerServlet extends HttpServlet {
 	public void setKeyValue(String key, String value){
 		nodes.put(key, ((value == null)? "": value) );
 	}
+	
 	public void setKeyValue(String key,AppJSONResponse value ){
 		nodes.put(key, value.getJSON());
 	}
+	
+	public void setKeyValue(String key,List<String> value ){
+		StringBuilder tmp = new StringBuilder();
+		tmp.append('[');
+		int counter = 0;
+		for (String item: value	){
+			if (counter > 0){
+				tmp.append(',');
+			}
+			
+			tmp.append(quote);
+			tmp.append(item);
+			tmp.append(quote);
+			++counter;
+		}
+		
+		tmp.append(']');
+		nodes.put(key, tmp.toString());
+	}
+	
+	
+	public void setKeyValue(String key,List<AppJSONResponse> value,Boolean dummy ){
+		StringBuilder tmp = new StringBuilder();
+		tmp.append('[');
+		int counter = 0;
+		for (AppJSONResponse item: value){
+			if (counter > 0){
+				tmp.append(',');
+			}
+	
+			tmp.append(item.getJSON());
+			++counter;
+		}
+		
+		tmp.append(']');
+		nodes.put(key, tmp.toString());
+	}
+	
+	
 	
 	public String  getJSON(){
 		StringBuilder json = new StringBuilder();
@@ -137,12 +210,12 @@ public class AccountManagerServlet extends HttpServlet {
 			json.append(colon);
 			String theval = entry.getValue();
 			
-			if (!theval.startsWith("{"))
+			if ( (!theval.startsWith("{")) && (!theval.startsWith("[")) )
 				json.append(quote);
 			
 			json.append(theval);
 			
-			if (!theval.startsWith("{"))
+			if ( (!theval.startsWith("{")) && (!theval.startsWith("[")) )
 				json.append(quote);
 			
 			++counter;
